@@ -12,12 +12,16 @@ SELECT * FROM users;            -- Query the users table
 .exit                           -- Exit the SQLite shell
 
 #### RUN ORM
-docker run --name cassandra -d cassandra:latest
+docker run -d -p 9042:9042 --name cassandra cassandra
+docker stop cassandra && docker rm cassandra && docker rmi cassandra:latest
+docker system prune -a --volumes -f
+
 pip install cassandra-driver
 
 docker exec -it cassandra cqlsh
-IF CANNOT CONNECT RUN "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cassandra"
-GET THE IP ADDRESS OF THE CONTAINER AND THEN RUN "docker exec -it cassandra cqlsh 172.17.0.2"
+-- IF CANNOT CONNECT, WAIT FEW MINUTES OR RUN 
+-- "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cassandra" TO
+-- GET THE IP ADDRESS OF THE CONTAINER AND THEN RUN "docker exec -it cassandra cqlsh 172.17.0.2"
 
 CREATE KEYSPACE cqlengine WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
